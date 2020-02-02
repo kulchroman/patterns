@@ -6,6 +6,7 @@ using namespace std;
 
 class Car;
 class Bycicle;
+
 class Transport
 {
 public:
@@ -28,13 +29,13 @@ public:
 };
 } // namespace Internal
 
-class TransportFabric
+class TransportFactory
 {
 public:
     virtual std::unique_ptr<Transport> createTransport() const = 0;
 };
 
-class BycicleFabric : public TransportFabric
+class BycicleFactory : public TransportFactory
 {
 public:
     std::unique_ptr<Transport> createTransport() const override
@@ -43,7 +44,7 @@ public:
     }
 };
 
-class CarFabric : public TransportFabric
+class CarFactory : public TransportFactory
 {
 public:
     std::unique_ptr<Transport> createTransport() const override
@@ -54,14 +55,14 @@ public:
 
 int main()
 {
-    CarFabric *carFab = new CarFabric;
-    BycicleFabric *bikeFab = new BycicleFabric;
+    CarFactory *carFab = new CarFactory;
+    BycicleFactory *bikeFab = new BycicleFactory;
 
     std::vector<std::unique_ptr<Transport>> transports;
     transports.push_back(carFab->createTransport());
     transports.push_back(bikeFab->createTransport());
 
-    for (auto &transport : transports)
+    for (const std::unique_ptr<Transport> &transport : transports)
         transport->info();
 
     return 0;
